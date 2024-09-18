@@ -1,70 +1,114 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React, { useState, useRef } from 'react';
+import {
+  View,
+  Text,
+  Button,
+  Modal,
+  Animated,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const { height } = Dimensions.get('window'); // Get the device height
 
-export default function HomeScreen() {
+const SlidePicker = () => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const slideAnim = useRef(new Animated.Value(height)).current; // Start off-screen (bottom)
+
+  // Function to slide in the picker
+  const slideIn = () => {
+    setModalVisible(true); // Open modal
+    Animated.timing(slideAnim, {
+      toValue: height * 0.5, // Move to 50% of the screen height (adjustable)
+      duration: 300, // Slide-in duration
+      useNativeDriver: false, // Set to false to use height animations
+    }).start();
+  };
+
+  // Function to slide out and close the picker
+  const slideOut = () => {
+    Animated.timing(slideAnim, {
+      toValue: height, // Move back off-screen
+      duration: 300, // Slide-out duration
+      useNativeDriver: false,
+    }).start(() => setModalVisible(false)); // Close modal after animation
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <View style={styles.container}>
+      <Button title='Open Picker' onPress={slideIn} />
+
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        animationType='none' // Custom animation handled by Animated API
+        onRequestClose={slideOut}
+      >
+        <TouchableOpacity style={styles.modalOverlay} onPress={slideOut}>
+          {/* This is the area outside the picker */}
+        </TouchableOpacity>
+
+        <Animated.View style={[styles.pickerContainer, { top: slideAnim }]}>
+          <View style={styles.pickerContent}>
+            <Text style={styles.pickerTitle}>Select an Option</Text>
+
+            {/* Picker or any other content */}
+            <TouchableOpacity onPress={slideOut}>
+              <Text style={styles.optionText}>Option 1</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={slideOut}>
+              <Text style={styles.optionText}>Option 2</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={slideOut}>
+              <Text style={styles.optionText}>Option 3</Text>
+            </TouchableOpacity>
+
+            <Button title='Close' onPress={slideOut} />
+          </View>
+        </Animated.View>
+      </Modal>
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: 8,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Darken the background
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
+  pickerContainer: {
     position: 'absolute',
+    left: 0,
+    right: 0,
+    height: height * 0.5, // 50% of the screen height (adjustable)
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  pickerContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  pickerTitle: {
+    fontSize: 18,
+    marginBottom: 20,
+    fontWeight: 'bold',
+  },
+  optionText: {
+    fontSize: 16,
+    padding: 10,
+    textAlign: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+    width: '100%',
   },
 });
+
+export default SlidePicker;
