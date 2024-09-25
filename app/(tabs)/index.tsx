@@ -355,3 +355,5 @@ export default SlidePicker;
 //     // Trigger an emergency alert
 // }
 // This code allows you to customize how your app handles push notifications, especially when it comes to handling data payloads or showing notifications when the app is open or in the background.
+
+// https://www.youtube.com/watch?v=2PVO__A9Xx0
