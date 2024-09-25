@@ -269,3 +269,89 @@ export default SlidePicker;
 // };
 
 // export default DistressButton;
+
+// @Override
+// public void onMessageReceived(RemoteMessage remoteMessage) {
+//   if (remoteMessage.getData().size() > 0) {
+//     Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+
+//     // Check if message contains a notification payload.
+//     if (remoteMessage.getNotification() != null) {
+//       Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+//     }
+//   }
+// }
+
+// How to Use It:
+// Integrating FCM in Your Android App:
+
+// First, ensure you have Firebase integrated into your Android project. You need to include the Firebase Cloud Messaging SDK in your project:
+
+// Add Firebase dependencies to your build.gradle:
+
+// implementation 'com.google.firebase:firebase-messaging:23.0.0'
+// Set up Firebase in your app by creating a google-services.json file and placing it in your app directory.
+
+// Modifying Your FirebaseMessagingService:
+
+// In your app, create or extend the FirebaseMessagingService class to handle the messages. The onMessageReceived method is part of this service.
+
+// Implement the code like this:
+
+// java
+// Copy code
+// import android.util.Log;
+// import com.google.firebase.messaging.FirebaseMessagingService;
+// import com.google.firebase.messaging.RemoteMessage;
+
+// public class MyFirebaseMessagingService extends FirebaseMessagingService {
+
+//     private static final String TAG = "MyFirebaseMsgService";
+
+//     @Override
+//     public void onMessageReceived(RemoteMessage remoteMessage) {
+//         // Check if message contains a data payload.
+//         if (remoteMessage.getData().size() > 0) {
+//             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+//             // Process the custom data payload here.
+//         }
+
+//         // Check if message contains a notification payload.
+//         if (remoteMessage.getNotification() != null) {
+//             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+//             // Show or handle the notification.
+//         }
+//     }
+// }
+// Processing Notifications:
+
+// When a message with data is received, the data is logged. You can use this data in your app to trigger certain actions, such as navigating to a specific screen or processing background tasks.
+// If there’s a notification payload, you can show the notification in a custom way or handle its content (like displaying the notification body).
+// Registering the Service:
+
+// You must register the FirebaseMessagingService in your AndroidManifest.xml:
+
+// xml
+// Copy code
+// <service
+//     android:name=".MyFirebaseMessagingService"
+//     android:exported="true">
+//     <intent-filter>
+//         <action android:name="com.google.firebase.MESSAGING_EVENT" />
+//     </intent-filter>
+// </service>
+// Receiving Notifications:
+
+// The code in onMessageReceived will now be triggered whenever your app receives a push notification (data or notification payload) from Firebase Cloud Messaging.
+// Debugging:
+
+// Use Log.d(TAG, ...) for debugging by checking the logcat to see the payload data and notification body when a message is received.
+// Example Usage:
+// You can modify this to perform actions based on the data received. For example, if a notification contains a specific action (e.g., alertType: emergency), you could display an alert to the user.
+
+// java
+// Copy code
+// if (remoteMessage.getData().containsKey("alertType") && remoteMessage.getData().get("alertType").equals("emergency")) {
+//     // Trigger an emergency alert
+// }
+// This code allows you to customize how your app handles push notifications, especially when it comes to handling data payloads or showing notifications when the app is open or in the background.
