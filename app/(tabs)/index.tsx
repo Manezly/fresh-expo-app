@@ -357,3 +357,18 @@ export default SlidePicker;
 // This code allows you to customize how your app handles push notifications, especially when it comes to handling data payloads or showing notifications when the app is open or in the background.
 
 // https://www.youtube.com/watch?v=2PVO__A9Xx0
+
+// async function createNotificationChannel() {
+//   if (Device.isDevice) {
+//     await Notifications.setNotificationChannelAsync('high_priority', {
+//       name: 'High Priority Notifications',
+//       importance: Notifications.AndroidImportance.MAX,
+//       sound: 'default', // Use default sound
+//       vibrationPattern: [0, 500, 1000, 500], // Custom vibration pattern
+//       lightColor: '#FF0000', // Red light
+//       description: 'Notifications that require immediate attention',
+//       showBadge: true, // Show badge on app icon
+//       lockscreenVisibility: Notifications.AndroidVisibility.PUBLIC, // Visible on lock screen
+//     });
+//   }
+// }
